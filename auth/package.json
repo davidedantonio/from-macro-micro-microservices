@@ -4,9 +4,9 @@
   "description": "The authentication service",
   "main": "server.js",
   "scripts": {
-    "test": "tap test/**/*.test.js",
     "start": "fastify-app run",
-    "dev": "fastify-app run -l info -P -w"
+    "dev": "fastify-app run -l info -P -w",
+    "mongo": "docker run -p 27017:27017 mongo:latest"
   },
   "keywords": [
     "fastify",
