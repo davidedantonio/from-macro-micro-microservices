@@ -51,7 +51,7 @@ module.exports = async function (fastify, opts) {
       }
     }
 
-    const token = await reply.jwtSign({ username: username, fullName: user.fullName })
+    const token = await reply.jwtSign({ username: username, fullName: fullName })
     return { token: token }
   })
 

@@ -1,12 +1,12 @@
 {
-  "name": "tickets-service",
+  "name": "gateway-service",
   "version": "1.0.0",
-  "description": "Tickets service",
+  "description": "A beautiful fastify app",
   "main": "server.js",
   "scripts": {
     "test": "tap test/**/*.test.js",
     "start": "fastify-app run",
-    "dev": "NODE_OPTIONS=\"-r ./apm.js\" fastify-app run -l info -p 3002"
+    "dev": "NODE_OPTIONS=\"-r ./apm.js\" fastify-app run -l info -p 3000"
   },
   "keywords": [
     "fastify",
@@ -19,10 +19,8 @@
     "elastic-apm-node": "^3.5.0",
     "fastify": "^2.13.0",
     "fastify-autoload": "^1.2.2",
-    "fastify-jwt": "^1.3.1",
-    "fastify-mongodb": "^2.0.0",
+    "fastify-http-proxy": "^3.2.0",
     "fastify-plugin": "^1.6.1",
-    "fluent-schema": "^0.10.0",
     "is-docker": "^2.0.0",
     "make-promises-safe": "^5.1.0",
     "pino-colada": "^1.6.1",

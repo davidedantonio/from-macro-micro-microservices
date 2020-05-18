@@ -6,6 +6,6 @@ COPY package*.json ./
 RUN npm install --production
 COPY . /usr/src/app
 
-EXPOSE 3001
+EXPOSE 3003
 RUN npm -g install create-fastify-app
 CMD [ "npm", "run", "dev" ]

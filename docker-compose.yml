@@ -3,7 +3,7 @@
   services:
     elasticsearch:
       image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
-      container_name: elasticsearch-wetalk
+      container_name: elasticsearch-web
       environment:
         - discovery.type=single-node
         - ES_JAVA_OPTS=-Xms1g -Xmx1g
@@ -21,7 +21,7 @@
         
     kibana:
       image: docker.elastic.co/kibana/kibana:7.6.0
-      container_name: kibana-wetalk
+      container_name: kibana-web
       environment:
         ELASTICSEARCH_URL: http://elasticsearch:9200
       ports:
@@ -33,7 +33,7 @@
     
     apm-server:
       image: docker.elastic.co/apm/apm-server:7.6.0
-      container_name: apm-wetalk
+      container_name: apm-server
       ports:
         - "8200:8200"
       environment:
@@ -71,8 +71,9 @@
         - /usr/src/app/node_modules
       links:
         - apm-server
-        - ticket-service
+        - tickets-service
         - auth-service
+        - users-service
     
     auth-service:
       container_name: auth-service
@@ -88,10 +89,10 @@
         - /usr/src/app/node_modules
       links:
       - apm-server
-      - mongodb-wetalk
+      - mongodb-web
   
-    ticket-service:
-      container_name: ticket-service
+    tickets-service:
+      container_name: tickets-service
       restart: always
       build: ./tickets
       command: ["npm", "run", "dev"]
@@ -104,5 +105,21 @@
         - /usr/src/app/node_modules
       links:
       - apm-server
-      - mongodb-wetalk
+      - mongodb-web
+
+    users-service:
+      container_name: users-service
+      restart: always
+      build: ./users
+      command: ["npm", "run", "dev"]
+      ports:
+        - "3003:3003"
+      environment:
+        - FASTIFY_PORT=3003
+      volumes:
+        - ./users/:/usr/src/app
+        - /usr/src/app/node_modules
+      links:
+      - apm-server
+      - mongodb-web
   

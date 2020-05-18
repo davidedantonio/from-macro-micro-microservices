@@ -11,5 +11,14 @@ module.exports = fp(async (fastify, opts) => {
     url: process.env.MONGODB_URL || `mongodb://${isDocker() ? 'mongodb-web' : 'localhost'}:27017/macro-to-micro`,
   }, opts.mongodb)
 
+  if (process.env.MONGODB_USER) {
+    mongoOpts = Object.assign(mongoOpts, {
+      auth: {
+        user: process.env.MONGODB_USER || '',
+        password: process.env.MONGODB_PASSWORD || ''
+      }
+    })
+  }
+
   fastify.register(MongoDB, mongoOpts)
 })
