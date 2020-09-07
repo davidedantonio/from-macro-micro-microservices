@@ -109,6 +109,8 @@ module.exports = async function(fastify, opts) {
     }
   }, async function (request, reply) {
     const user = request.body
+    const hashedPassword = await pwd.hash(Buffer.from(user.password))
+    Object.assign(user, { password: hashedPassword })
     
     const data = await usersCollection.insertOne(user)
     const _id = data.ops[0]._id
