@@ -106,4 +106,20 @@ module.exports = async function (fastify, opts) {
     const token = await reply.jwtSign({ username: username, fullName: user.fullName })
     return { token: token }
   })
+
+  fastify.get('/me', {
+    schema: {
+      response: {
+        200: S.object()
+          .prop('username', S.string())
+          .prop('fullName', S.string()),
+        404: S.object()
+          .prop('message', S.string()),
+        400: S.object()
+          .prop('message', S.string())
+      }
+    }
+  }, async function (request, reply) {
+    return request.user
+  })
 }
