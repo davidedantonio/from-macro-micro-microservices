@@ -1,6 +1,7 @@
 'use strict'
 const S = require('fluent-schema')
 const securePassword = require('secure-password')
+const DUPLICATE_KEY_ERROR = 11000
 
 module.exports = async function(fastify, opts) {
   const pwd = securePassword()
@@ -72,8 +73,7 @@ module.exports = async function(fastify, opts) {
   }, async function (request, reply) {
     const { id } = request.params;
     const user = await usersCollection.findOne({
-      _id: new ObjectId(id),
-      username: request.user.username
+      _id: new ObjectId(id)
     })
 
     if (!user) {
@@ -112,11 +112,17 @@ module.exports = async function(fastify, opts) {
     const hashedPassword = await pwd.hash(Buffer.from(user.password))
     Object.assign(user, { password: hashedPassword })
     
-    const data = await usersCollection.insertOne(user)
-    const _id = data.ops[0]._id
-
-    return Object.assign({
-      _id
-    }, user)
+    try {
+      const data = await usersCollection.insertOne(user)
+      const _id = data.ops[0]._id
+      return Object.assign({
+        _id
+      }, user)
+    } catch (err) {
+      // duplicate key error
+      if (err.code === DUPLICATE_KEY_ERROR) {
+        return reply.code(400).send({ message: 'username already registered' })
+      }
+    }
   })
 }
