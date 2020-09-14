@@ -112,11 +112,7 @@ module.exports = async function (fastify, opts) {
       response: {
         200: S.object()
           .prop('username', S.string())
-          .prop('fullName', S.string()),
-        404: S.object()
-          .prop('message', S.string()),
-        400: S.object()
-          .prop('message', S.string())
+          .prop('fullName', S.string())
       }
     }
   }, async function (request, reply) {
