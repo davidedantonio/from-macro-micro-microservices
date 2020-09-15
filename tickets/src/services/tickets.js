@@ -87,7 +87,7 @@ module.exports = async function(fastify, opts) {
       body: S.object()
         .prop('subject', S.string().required())
         .prop('body', S.string().required())
-        .prop('creation-date', S.string().format('date-time').required()),
+        .prop('creation_date', S.string().format('date-time').required()),
       response: {
         200: S.ref('#ticket')
       }
