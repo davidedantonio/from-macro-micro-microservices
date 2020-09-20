@@ -1,4 +1,4 @@
-# Micro-services example using FAstify
+# Micro-services example using Fastify
 
 Run in locale 
 
