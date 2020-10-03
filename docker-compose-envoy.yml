@@ -78,7 +78,6 @@
         dockerfile: ./envoy/Dockerfile
       volumes:
         - ./envoy/api-envoy.yaml:/etc/api-envoy.yaml
-        - ./envoy/functions.lua:/etc/functions.lua
       expose:
         - "8000"
       networks:
