@@ -17,7 +17,7 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "elastic-apm-node": "^3.5.0",
-    "fastify": "^2.13.0",
+    "fastify": "^2.15.1",
     "fastify-autoload": "^1.2.2",
     "fastify-cors": "^3.0.3",
     "fastify-http-proxy": "^3.2.0",
