@@ -37,12 +37,14 @@ module.exports = async function (fastify, opts) {
   }, async function (request, reply) {
     const { fullName, username, password } = request.body
     const hashedPassword = await pwd.hash(Buffer.from(password))
+    const profile = 'admin'
 
     try {
       await users.insertOne({
         'fullName': fullName,
         'username': username,
-        'password': hashedPassword
+        'password': hashedPassword,
+        'profile': profile
       })
     } catch (err) {
       // duplicate key error
@@ -51,7 +53,7 @@ module.exports = async function (fastify, opts) {
       }
     }
 
-    const token = await reply.jwtSign({ username: username, fullName: fullName })
+    const token = await reply.jwtSign({ username: username, fullName: fullName, profile: profile })
     return { token: token }
   })
 
@@ -113,6 +115,7 @@ module.exports = async function (fastify, opts) {
         200: S.object()
           .prop('username', S.string())
           .prop('fullName', S.string())
+          .prop('profile', S.string())
       }
     }
   }, async function (request, reply) {
