@@ -1,11 +1,14 @@
-FROM node:12
+FROM node:14
 
+# Create app directory
 WORKDIR /usr/src/app
-COPY package*.json ./
 
+# Install app dependencies
+COPY package*.json ./
 RUN npm install --production
-COPY . /usr/src/app
+
+# Bundle app source
+COPY . .
 
 EXPOSE 3001
-RUN npm -g install create-fastify-app
-CMD [ "npm", "run", "dev" ]
+CMD [ "npm", "run", "apm" ]
