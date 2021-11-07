@@ -55,12 +55,14 @@ module.exports = async function (fastify, opts) {
   }, signin)
 
   fastify.get('/me', {
+    preHandler: async function (request, reply) {
+      return request.jwtVerify()
+    },
     schema: {
       response: {
         200: S.object()
           .prop('username', S.string())
           .prop('fullName', S.string())
-          .prop('profile', S.string())
       }
     }
   }, me)

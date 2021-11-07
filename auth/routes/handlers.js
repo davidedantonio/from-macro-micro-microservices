@@ -22,7 +22,7 @@ async function signup (request, reply) {
   } catch (err) {
     // duplicate key error
     if (err.code === DUPLICATE_KEY_ERROR) {
-      return this.httpErrors.notFound('username already registered')
+      return this.httpErrors.badRequest('username already registered')
     }
   }
 
@@ -46,13 +46,6 @@ async function signin (request, reply) {
       return this.httpErrors.badRequest('This hash was not made with secure-password. Attempt legacy algorithm')
     case securePassword.INVALID:
       return this.httpErrors.badRequest('Invalid password')
-    case securePassword.VALID_NEEDS_REHASH:
-      /* eslint-disable no-case-declarations */
-      this.log.info({ username }, 'password needs rehashing')
-      const hashedPassword = await pwd.hash(Buffer.from(password))
-      await users.update({ _id: user._id }, { hashedPassword })
-      break
-      /* eslint-enable no-case-declarations */
   }
 
   const token = await reply.jwtSign({ username: username, fullName: user.fullName })

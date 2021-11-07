@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "test": "npm run lint && tap \"test/**/*.test.js\"",
+    "test": "npm run lint && tap --no-check-coverage \"test/**/*.test.js\" --jobs=1 ",
     "create:env": "node -r fs -e \"fs.copyFileSync('.env-template', '.env', fs.constants.COPYFILE_EXCL)\"",
     "start": "fastify start -l info app.js",
     "dev": "fastify start -p 3001 -w -l info -P app.js",
@@ -31,6 +31,7 @@
     "secure-password": "^4.0.0"
   },
   "devDependencies": {
+    "mongo-clean": "^2.0.0",
     "standard": "^16.0.4",
     "tap": "^15.0.9"
   }
