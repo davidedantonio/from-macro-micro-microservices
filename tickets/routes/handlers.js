@@ -10,7 +10,7 @@ async function createTicket (request, reply) {
   })
 
   const data = await collection.insertOne(ticket)
-  const _id = data.ops[0]._id
+  const _id = data.insertedId.toString()
 
   return Object.assign(ticket, {
     _id

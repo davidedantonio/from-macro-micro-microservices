@@ -20,7 +20,8 @@ module.exports = async function (fastify, opts) {
           .required()),
       response: {
         204: S.null(),
-        404: schema.error
+        404: schema.error,
+        500: schema.error
       }
     }
   }, deleteTicket)
@@ -31,7 +32,8 @@ module.exports = async function (fastify, opts) {
       description: 'Get all the tickets from the database',
       response: {
         200: S.array().items(schema.ticket),
-        404: schema.error
+        404: schema.error,
+        500: schema.error
       }
     }
   }, getAllTickets)
@@ -44,7 +46,8 @@ module.exports = async function (fastify, opts) {
         .prop('id', S.string().required()),
       response: {
         200: schema.ticket,
-        404: schema.error
+        404: schema.error,
+        500: schema.error
       }
     }
   }, getTicketById)
@@ -57,7 +60,8 @@ module.exports = async function (fastify, opts) {
         .prop('subject', S.string().required())
         .prop('body', S.string().required()),
       response: {
-        200: schema.ticket
+        200: schema.ticket,
+        500: schema.error
       }
     }
   }, createTicket)

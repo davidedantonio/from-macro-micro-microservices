@@ -1,6 +1,7 @@
 'use strict'
 
 const { testWithLogin } = require('../helper')
+
 const fakeUser = {
   username: 'username',
   password: 'password',

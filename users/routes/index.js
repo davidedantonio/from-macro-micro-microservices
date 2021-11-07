@@ -26,7 +26,8 @@ module.exports = async function (fastify, opts) {
           .required()),
       response: {
         204: S.null(),
-        404: schema.error
+        404: schema.error,
+        500: schema.error
       }
     }
   }, deleteUser)
@@ -38,7 +39,8 @@ module.exports = async function (fastify, opts) {
       response: {
         200: S.array().items(
           schema.basicUserInfo
-        )
+        ),
+        500: schema.error
       }
     }
   }, getAllUsers)
@@ -76,7 +78,8 @@ module.exports = async function (fastify, opts) {
       response: {
         200: S.object()
           .prop('_id', S.string()),
-        400: schema.error
+        400: schema.error,
+        500: schema.error
       }
     }
   }, createUser)
