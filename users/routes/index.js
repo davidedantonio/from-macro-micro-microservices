@@ -11,6 +11,11 @@ const {
 } = require('./handlers')
 
 module.exports = async function (fastify, opts) {
+  const users = fastify.mongo.db.collection('users')
+  await users.createIndex({
+    username: 1
+  }, { unique: true })
+
   fastify.delete('/:id', {
     schema: {
       tags: ['users'],
@@ -46,7 +51,8 @@ module.exports = async function (fastify, opts) {
         .prop('id', S.string().required()),
       response: {
         200: schema.basicUserInfo,
-        404: schema.error
+        404: schema.error,
+        500: schema.error
       }
     }
   }, getUserById)
@@ -69,7 +75,7 @@ module.exports = async function (fastify, opts) {
           .required()),
       response: {
         200: S.object()
-          .prop('id', S.string()),
+          .prop('_id', S.string()),
         400: schema.error
       }
     }

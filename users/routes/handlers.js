@@ -13,7 +13,7 @@ async function deleteUser (request, reply) {
   })
 
   if (result.deletedCount === 0) {
-    this.httpErrors.notFound(`No user found with id ${id}`)
+    return this.httpErrors.notFound(`No user found with id ${id}`)
   }
 
   reply.code(204).send()
@@ -54,13 +54,16 @@ async function createUser (request, reply) {
 
   try {
     const data = await collection.insertOne(user)
-    const _id = data.ops[0]._id
+    const _id = data.insertedId.toString()
+
     return { _id: _id }
   } catch (err) {
     // duplicate key error
     if (err.code === DUPLICATE_KEY_ERROR) {
       return this.httpErrors.badRequest(`username ${user.username}} already registered`)
     }
+
+    return this.httpErrors.internalServerError(err.message)
   }
 }
 
