@@ -50,29 +50,29 @@
     mongodb-web:
       image: mongo:4.4.10
       container_name: mongodb-web
+      networks:
+        envoymesh:
+          aliases:
+            - mondodb-web
       ports:
         - "27017:27017"
       expose: 
         - "27017"
-  
-    gateway-service:
-      container_name: gateway-service
-      build: ./gateway
-      command: ["npm", "run", "apm"]
-      ports:
-        - "3000:3000"
+    
+    api-envoy:
+      container_name: api-envoy
+      build:
+        context: .
+        dockerfile: ./envoy/Dockerfile
+      volumes:
+        - ./envoy/api-envoy.yaml:/etc/api-envoy.yaml
       expose:
         - "3000"
-      environment:
-        - FASTIFY_PORT=3000
-      volumes:
-        - ./gateway/:/usr/src/app
-        - /usr/src/app/node_modules
-      links:
-        - apm-server
-        - tickets-service
-        - auth-service
-        - users-service
+      networks:
+        - envoymesh
+      ports:
+        - "3000:3000"
+        - "9901:9901"
     
     auth-service:
       container_name: auth-service
@@ -86,8 +86,10 @@
         - ./auth/:/usr/src/app
         - /usr/src/app/node_modules
       links:
-      - apm-server
-      - mongodb-web
+        - apm-server
+        - mongodb-web
+      networks:
+        - envoymesh
   
     tickets-service:
       container_name: tickets-service
@@ -101,8 +103,10 @@
         - ./tickets/:/usr/src/app
         - /usr/src/app/node_modules
       links:
-      - apm-server
-      - mongodb-web
+        - apm-server
+        - mongodb-web
+      networks:
+        - envoymesh
 
     users-service:
       container_name: users-service
@@ -116,6 +120,10 @@
         - ./users/:/usr/src/app
         - /usr/src/app/node_modules
       links:
-      - apm-server
-      - mongodb-web
-  
+        - apm-server
+        - mongodb-web
+      networks:
+        - envoymesh
+
+  networks:
+    envoymesh: {}

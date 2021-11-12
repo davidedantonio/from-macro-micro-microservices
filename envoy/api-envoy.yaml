@@ -1,0 +1,157 @@
+admin:
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 9901
+
+static_resources:
+  listeners:
+    - address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 3000
+      filter_chains:
+        - filters:
+          - name: envoy.filters.network.http_connection_manager
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+              stat_prefix: ingress_http
+              use_remote_address: true
+              http2_protocol_options:
+                max_concurrent_streams: 100
+              
+              http_filters:
+                - name: envoy.filters.http.cors
+                - name: envoy.filters.http.router
+                
+              route_config:
+                name: all
+                virtual_hosts:
+                  - name: all_backend
+                    domains:
+                      - "*"
+                    cors:
+                      allow_origin_string_match:
+                      - safe_regex:
+                          google_re2: {}
+                          regex: \*
+                      allow_methods: GET,PUT,DELETE,POST,OPTIONS
+                      filter_enabled:
+                        default_value:
+                          numerator: 100
+                          denominator: HUNDRED
+                        runtime_key: cors.www.enabled
+                      shadow_enabled:
+                        default_value:
+                          numerator: 0
+                          denominator: HUNDRED
+                        runtime_key: cors.www.shadow_enabled
+                    
+                    routes:
+                      - match: 
+                          prefix: "/signin"
+                        route:
+                          cluster: auth
+                          cors:
+                            filter_enabled:
+                              default_value:
+                                numerator: 0
+                                denominator: HUNDRED
+                      
+                      - match: 
+                          prefix: "/signup"
+                        route:
+                          cluster: auth
+                          cors:
+                            filter_enabled:
+                              default_value:
+                                numerator: 0
+                                denominator: HUNDRED
+
+                      
+                      - match: 
+                          prefix: "/api/ticket/"
+                        route:
+                          prefix_rewrite: "/"
+                          cluster: tickets
+                          cors:
+                            filter_enabled:
+                              default_value:
+                                numerator: 0
+                                denominator: HUNDRED
+
+                      - match: 
+                          prefix: "/api/ticket"
+                        route:
+                          prefix_rewrite: "/"
+                          cluster: tickets
+                          cors:
+                            filter_enabled:
+                              default_value:
+                                numerator: 0
+                                denominator: HUNDRED
+
+                      - match: 
+                          prefix: "/api/user/"
+                        route:
+                          prefix_rewrite: "/"
+                          cluster: users
+                          cors:
+                            filter_enabled:
+                              default_value:
+                                numerator: 0
+                                denominator: HUNDRED
+                      
+                      - match: 
+                          prefix: "/api/user"
+                        route:
+                          prefix_rewrite: "/"
+                          cluster: users
+                          cors:
+                            filter_enabled:
+                              default_value:
+                                numerator: 0
+                                denominator: HUNDRED
+              
+  clusters:
+    - name: auth
+      connect_timeout: 60s
+      type: strict_dns
+      lb_policy: round_robin
+      load_assignment:
+        cluster_name: auth
+        endpoints:
+          - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: auth-service
+                    port_value: 3001
+
+    - name: tickets
+      connect_timeout: 60s
+      type: strict_dns
+      lb_policy: round_robin
+      load_assignment:
+        cluster_name: tickets
+        endpoints:
+          - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: tickets-service
+                    port_value: 3002
+
+    - name: users
+      connect_timeout: 60s
+      type: strict_dns
+      lb_policy: round_robin
+      load_assignment:
+        cluster_name: users
+        endpoints:
+        - lb_endpoints:
+          - endpoint:
+              address:
+                socket_address:
+                  address: users-service
+                  port_value: 3003

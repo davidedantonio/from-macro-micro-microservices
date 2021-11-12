@@ -23,6 +23,7 @@
     "fastify": "^3.0.0",
     "fastify-autoload": "^3.3.1",
     "fastify-cli": "^2.13.0",
+    "fastify-cors": "^6.0.2",
     "fastify-jwt": "^3.2.1",
     "fastify-mongodb": "^4.1.1",
     "fastify-plugin": "^3.0.0",
