@@ -1,0 +1,25 @@
+{
+  "name": "from-macro-micro-microservices",
+  "version": "1.0.0",
+  "description": "DevDay From macro to micro",
+  "main": "query-db.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidedantonio/from-macro-micro-microservices.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "Davide D'Antonio <davide.dantonio@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidedantonio/from-macro-micro-microservices/issues"
+  },
+  "homepage": "https://github.com/davidedantonio/from-macro-micro-microservices#readme",
+  "dependencies": {
+    "axios": "^0.26.1"
+  }
+}
